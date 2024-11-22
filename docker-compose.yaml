@@ -1,0 +1,17 @@
+services:
+  concise-connect-postgres:
+    container_name: concise-connect-postgres
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      PGDATA: /data/postgres
+    volumes:
+      - concise-connect-postgres:/data/postgres
+    ports:
+      - ${DATABASE_PORT}:5432
+    restart: unless-stopped
+
+volumes:
+  concise-connect-postgres:
