@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id Int @id @default(autoincrement())
+
+    nickName String @map(name: "nick_name") @db.VarChar
+
+    outgoingMessages Message[] @relation(name: "outgoing_messages")
+    incomingMessages Message[] @relation(name: "incoming_messages")
+
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
+}
+
+model Message {
+    id Int @id @default(autoincrement())
+
+    fromUserId Int    @map(name: "from_user_id")
+    toUserId   Int    @map(name: "to_user_id")
+    text       String @db.Text
+
+    fromUser User @relation(name: "outgoing_messages", fields: [fromUserId], references: [id])
+    toUser   User @relation(name: "incoming_messages", fields: [toUserId], references: [id])
+
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
+}
