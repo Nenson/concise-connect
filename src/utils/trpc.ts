@@ -10,7 +10,7 @@ import superjson from "superjson"
 
 const { publicRuntimeConfig } = getConfig()
 
-const { APP_URL, WS_URL } = publicRuntimeConfig
+const { APP_URL, WSS_URL } = publicRuntimeConfig
 
 function getEndingLink(ctx: NextPageContext | undefined): TRPCLink<AppRouter> {
   if (typeof window === "undefined") {
@@ -30,7 +30,7 @@ function getEndingLink(ctx: NextPageContext | undefined): TRPCLink<AppRouter> {
     })
   }
   const client = createWSClient({
-    url: WS_URL,
+    url: WSS_URL,
   })
   return wsLink({
     client,
