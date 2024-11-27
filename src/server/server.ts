@@ -23,7 +23,7 @@ app.prepare().then(() => {
     await handle(req, res, parsedUrl)
   })
 
-  const wss = new WebSocketServer({ server })
+  const wss = new WebSocketServer({ noServer: true })
 
   const handler = applyWSSHandler({
     wss,
