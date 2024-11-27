@@ -1,10 +1,21 @@
 import { db } from "@/server/db"
+import { User } from "@prisma/client"
 
 interface IUserCreateInput {
   readonly nickName: string
 }
 
-export async function createUser(input: IUserCreateInput) {
+export interface IUserCreateOutput {
+  readonly data: User | null
+  readonly error: {
+    readonly code: string
+    readonly message: string
+  } | null
+}
+
+export async function createUser(
+  input: IUserCreateInput
+): Promise<IUserCreateOutput> {
   const existingUser = await db.user.findFirst({
     where: {
       nickName: input.nickName,
