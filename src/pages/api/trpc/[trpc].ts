@@ -1,9 +1,7 @@
-import { appRouter } from "@/server/routers/_app"
+import { type AppRouter, appRouter } from "@/server/routers/_app"
 import * as trpcNext from "@trpc/server/adapters/next"
 
-export type AppRouter = typeof appRouter
-
-export default trpcNext.createNextApiHandler({
+export default trpcNext.createNextApiHandler<AppRouter>({
   router: appRouter,
   onError: ({ path, error }) => {
     if (process.env.NODE_ENV === "development") {
