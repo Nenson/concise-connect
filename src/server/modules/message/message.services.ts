@@ -1,11 +1,6 @@
 import { db } from "@/server/db"
 import { Message } from "@prisma/client"
-
-interface IMessageCreateInput {
-  readonly fromUserId: number
-  readonly toUserId: number
-  readonly text: string
-}
+import { IMessageCreateInput } from "./message.validation-schemas"
 
 export interface IMessageCreateOutput {
   readonly data: Message | null

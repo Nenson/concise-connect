@@ -1,9 +1,6 @@
 import { db } from "@/server/db"
 import { User } from "@prisma/client"
-
-interface IUserCreateInput {
-  readonly nickName: string
-}
+import { IUserCreateInput } from "./user.validation-schemas"
 
 export interface IUserCreateOutput {
   readonly data: User | null

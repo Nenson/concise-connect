@@ -5,3 +5,7 @@ export const MESSAGE_CREATE_VALIDATION_SCHEMA = z.object({
   toUserId: z.number(),
   text: z.string(),
 })
+
+export type IMessageCreateInput = z.infer<
+  typeof MESSAGE_CREATE_VALIDATION_SCHEMA
+>
