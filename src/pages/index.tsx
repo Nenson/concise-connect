@@ -1,4 +1,5 @@
 import { ApplicationToolbar } from "@/components/application-toolbar.component"
+import { MessagingSection } from "@/components/messaging-section.component"
 import { UsersList } from "@/components/users-list.component"
 import { Box } from "@mui/material"
 import Head from "next/head"
@@ -22,14 +23,7 @@ export default function Home() {
         >
           <ApplicationToolbar />
           <UsersList />
-          <Box
-            sx={{
-              flexGrow: { xs: 20, md: 12 },
-              padding: 4,
-            }}
-          >
-            Messaging Section
-          </Box>
+          <MessagingSection />
         </Box>
       </main>
     </>
