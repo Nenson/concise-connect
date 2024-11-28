@@ -1,4 +1,3 @@
-import EventEmitter from "events"
 import { MESSAGE_CREATE_VALIDATION_SCHEMA } from "../modules/message/message.validation-schemas"
 import { createTRPCRouter, publicProcedure } from "../trpc"
 import {
@@ -7,33 +6,7 @@ import {
   IMessageCreateOutput,
 } from "@/server/modules/message/message.services"
 import { observable } from "@trpc/server/observable"
-
-interface IMessageEvents {
-  readonly messageCreated: (data: IMessageCreateOutput) => void
-}
-
-declare interface MessageEventEmitter {
-  on<TEv extends keyof IMessageEvents>(
-    event: TEv,
-    listener: IMessageEvents[TEv]
-  ): this
-  off<TEv extends keyof IMessageEvents>(
-    event: TEv,
-    listener: IMessageEvents[TEv]
-  ): this
-  once<TEv extends keyof IMessageEvents>(
-    event: TEv,
-    listener: IMessageEvents[TEv]
-  ): this
-  emit<TEv extends keyof IMessageEvents>(
-    event: TEv,
-    ...args: Parameters<IMessageEvents[TEv]>
-  ): boolean
-}
-
-class MessageEventEmitter extends EventEmitter {}
-
-const eventEmitter = new MessageEventEmitter()
+import { eventEmitter } from "./event-emitter"
 
 export const messageRouter = createTRPCRouter({
   create: publicProcedure
