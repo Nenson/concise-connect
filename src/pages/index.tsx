@@ -1,4 +1,5 @@
 import { ApplicationToolbar } from "@/components/application-toolbar.component"
+import { UsersList } from "@/components/users-list.component"
 import { Box } from "@mui/material"
 import Head from "next/head"
 
@@ -20,14 +21,7 @@ export default function Home() {
           }}
         >
           <ApplicationToolbar />
-          <Box
-            sx={{
-              flexGrow: { xs: 20, md: 4 },
-              padding: 4,
-            }}
-          >
-            Users List
-          </Box>
+          <UsersList />
           <Box
             sx={{
               flexGrow: { xs: 20, md: 12 },
