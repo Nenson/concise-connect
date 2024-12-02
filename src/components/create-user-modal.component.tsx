@@ -1,16 +1,15 @@
 import { Box, Modal, Typography } from "@mui/material"
 import { CreateUserForm } from "./create-user-form.component"
+import { IUser } from "@/pages"
 
 interface IProps {
-  readonly open: boolean
-  readonly onClose: () => void
+  readonly onCreateUser: (user: IUser) => void
 }
 
-export function CreateUserModal({ open, onClose }: IProps) {
+export function CreateUserModal({ onCreateUser }: IProps) {
   return (
     <Modal
-      open={open}
-      onClose={onClose}
+      open={true}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -35,7 +34,11 @@ export function CreateUserModal({ open, onClose }: IProps) {
         <Typography variant="h6" component="h2" sx={{ marginBottom: 2 }}>
           Concise Connect
         </Typography>
-        <CreateUserForm onSuccess={onClose} />
+        <CreateUserForm
+          onSuccess={(user) => {
+            onCreateUser(user)
+          }}
+        />
       </Box>
     </Modal>
   )

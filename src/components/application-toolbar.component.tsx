@@ -1,10 +1,10 @@
 import { Avatar, Box } from "@mui/material"
 import IconButton from "@mui/material/IconButton"
 import VolumeUpIcon from "@mui/icons-material/VolumeUp"
-import { RouterOutputs } from "@/utils/trpc"
+import { IUser } from "@/pages"
 
 interface IProps {
-  readonly user: RouterOutputs["user"]["fetchMany"]["data"][number]
+  readonly user: IUser
 }
 
 export function ApplicationToolbar({ user }: IProps) {

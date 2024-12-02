@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { trpc } from "@/utils/trpc"
 import { useCallback, useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
+import { IUser } from "@/pages"
 
 const validationSchema = z.object({
   nickName: z
@@ -27,11 +27,10 @@ const validationSchema = z.object({
 type FormData = z.infer<typeof validationSchema>
 
 interface IProps {
-  readonly onSuccess: () => void
+  readonly onSuccess: (user: IUser) => void
 }
 
 export function CreateUserForm({ onSuccess }: IProps) {
-  const [_, setCookies] = useCookies()
   const [showAlert, setShowAlert] = useState(false)
 
   const {
@@ -75,8 +74,7 @@ export function CreateUserForm({ onSuccess }: IProps) {
           setShowAlert(false)
         }
 
-        setCookies("user", response.data)
-        onSuccess()
+        onSuccess(response.data)
       }
     },
     onError: () => {

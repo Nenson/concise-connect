@@ -1,9 +1,9 @@
 import { Box, Divider, List, Typography } from "@mui/material"
 import { UsersListItem } from "./users-list-item.component"
-import { RouterOutputs } from "@/utils/trpc"
+import { IUser } from "@/pages"
 
 interface IProps {
-  readonly users: RouterOutputs["user"]["fetchMany"]["data"]
+  readonly users: IUser[]
 }
 
 export function UsersList({ users }: IProps) {

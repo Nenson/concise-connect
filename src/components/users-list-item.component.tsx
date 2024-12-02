@@ -1,10 +1,10 @@
-import { Avatar, Box, ListItem, Typography } from "@mui/material"
+import { Avatar, ListItem, Typography } from "@mui/material"
 
-interface Props {
-  nickName: string
+interface IProps {
+  readonly nickName: string
 }
 
-export function UsersListItem({ nickName }: Props) {
+export function UsersListItem({ nickName }: IProps) {
   return (
     <ListItem
       sx={{
@@ -14,7 +14,7 @@ export function UsersListItem({ nickName }: Props) {
       }}
     >
       <Avatar sizes="small" sx={{ width: 28, height: 28 }}>
-        {nickName.slice(0, 1)}
+        {nickName.slice(0, 1).toUpperCase()}
       </Avatar>
       <Typography color="primary">{nickName}</Typography>
     </ListItem>

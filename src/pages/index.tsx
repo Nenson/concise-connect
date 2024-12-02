@@ -2,14 +2,38 @@ import { ApplicationToolbar } from "@/components/application-toolbar.component"
 import { CreateUserModal } from "@/components/create-user-modal.component"
 import { MessagingSection } from "@/components/messaging-section.component"
 import { UsersList } from "@/components/users-list.component"
+import { trpc } from "@/utils/trpc"
 import { Box } from "@mui/material"
 import Head from "next/head"
-import { useState } from "react"
-import { useCookies } from "react-cookie"
+import { useEffect, useState } from "react"
+
+export interface IUser {
+  readonly id: number
+  readonly nickName: string
+}
 
 export default function Home() {
-  const [cookies] = useCookies(["user"])
-  const [showModal, setShowModal] = useState(Boolean(!cookies.user))
+  const [user, setUser] = useState<IUser | null>(null)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = window.localStorage.getItem("user")
+
+      if (user) {
+        setUser(JSON.parse(user))
+      }
+    }
+  })
+
+  const setUserToLocalStorage = (userData: IUser) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("user", JSON.stringify(userData))
+    }
+  }
+
+  const { data: users, refetch } = trpc.user.fetchMany.useQuery({
+    excludeId: user?.id,
+  })
 
   return (
     <>
@@ -27,11 +51,22 @@ export default function Home() {
             flexDirection: { xs: "column", md: "row" },
           }}
         >
-          <ApplicationToolbar />
-          <UsersList />
-          <MessagingSection />
+          {user ? (
+            <>
+              <ApplicationToolbar user={user} />
+              <UsersList users={users?.data || []} />
+              <MessagingSection />
+            </>
+          ) : (
+            <CreateUserModal
+              onCreateUser={(userData) => {
+                setUser(userData)
+                setUserToLocalStorage(userData)
+                refetch()
+              }}
+            />
+          )}
         </Box>
-        <CreateUserModal open={showModal} onClose={() => setShowModal(false)} />
       </main>
     </>
   )
