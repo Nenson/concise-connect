@@ -1,6 +1,10 @@
 import { db } from "@/server/db"
 import { User } from "@prisma/client"
-import { IUserCreateInput, IUserFetchOneInput } from "./user.validation-schemas"
+import {
+  IUserCreateInput,
+  IUserFetchManyInput,
+  IUserFetchOneInput,
+} from "./user.validation-schemas"
 
 export interface IUserCreateOutput {
   readonly data: User | null
@@ -54,8 +58,14 @@ export async function fetchUser(input: IUserFetchOneInput) {
   }
 }
 
-export async function fetchUsers() {
-  const users = await db.user.findMany()
+export async function fetchUsers(input: IUserFetchManyInput) {
+  const users = await db.user.findMany({
+    where: {
+      id: {
+        not: input.excludeId,
+      },
+    },
+  })
 
   return {
     data: users,

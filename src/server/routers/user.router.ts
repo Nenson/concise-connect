@@ -1,5 +1,6 @@
 import {
   USER_CREATE_VALIDATION_SCHEMA,
+  USER_FETCH_MANY_VALIDATION_SCHEMA,
   USER_FETCH_ONE_VALIDATION_SCHEMA,
 } from "../modules/user/user.validation-schemas"
 import { createTRPCRouter, publicProcedure } from "../trpc"
@@ -38,5 +39,7 @@ export const userRouter = createTRPCRouter({
       }
     })
   }),
-  fetchMany: publicProcedure.query(async () => fetchUsers()),
+  fetchMany: publicProcedure
+    .input(USER_FETCH_MANY_VALIDATION_SCHEMA)
+    .query(async ({ input }) => fetchUsers(input)),
 })

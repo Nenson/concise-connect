@@ -13,3 +13,11 @@ export const USER_FETCH_ONE_VALIDATION_SCHEMA = z.object({
 export type IUserFetchOneInput = z.infer<
   typeof USER_FETCH_ONE_VALIDATION_SCHEMA
 >
+
+export const USER_FETCH_MANY_VALIDATION_SCHEMA = z.object({
+  excludeId: z.number().optional(),
+})
+
+export type IUserFetchManyInput = z.infer<
+  typeof USER_FETCH_MANY_VALIDATION_SCHEMA
+>
