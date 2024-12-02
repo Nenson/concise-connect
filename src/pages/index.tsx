@@ -2,6 +2,7 @@ import { ApplicationToolbar } from "@/components/application-toolbar.component"
 import { CreateUserModal } from "@/components/create-user-modal.component"
 import { MessagingSection } from "@/components/messaging-section.component"
 import { UsersList } from "@/components/users-list.component"
+import { MessagingContextProvider } from "@/contexts/messaging.context"
 import { trpc } from "@/utils/trpc"
 import { Box } from "@mui/material"
 import Head from "next/head"
@@ -54,8 +55,10 @@ export default function Home() {
           {user ? (
             <>
               <ApplicationToolbar user={user} />
-              <UsersList users={users?.data || []} />
-              <MessagingSection />
+              <MessagingContextProvider>
+                <UsersList users={users?.data || []} />
+                <MessagingSection />
+              </MessagingContextProvider>
             </>
           ) : (
             <CreateUserModal
