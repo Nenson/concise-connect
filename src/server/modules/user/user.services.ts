@@ -1,6 +1,6 @@
 import { db } from "@/server/db"
 import { User } from "@prisma/client"
-import { IUserCreateInput } from "./user.validation-schemas"
+import { IUserCreateInput, IUserFetchOneInput } from "./user.validation-schemas"
 
 export interface IUserCreateOutput {
   readonly data: User | null
@@ -37,6 +37,19 @@ export async function createUser(
 
   return {
     data: createdUser,
+    error: null,
+  }
+}
+
+export async function fetchUser(input: IUserFetchOneInput) {
+  const user = await db.user.findFirst({
+    where: {
+      nickName: input.nickName,
+    },
+  })
+
+  return {
+    data: user,
     error: null,
   }
 }

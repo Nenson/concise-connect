@@ -1,7 +1,11 @@
-import { USER_CREATE_VALIDATION_SCHEMA } from "../modules/user/user.validation-schemas"
+import {
+  USER_CREATE_VALIDATION_SCHEMA,
+  USER_FETCH_ONE_VALIDATION_SCHEMA,
+} from "../modules/user/user.validation-schemas"
 import { createTRPCRouter, publicProcedure } from "../trpc"
 import {
   createUser,
+  fetchUser,
   fetchUsers,
   IUserCreateOutput,
 } from "@/server/modules/user/user.services"
@@ -9,6 +13,9 @@ import { observable } from "@trpc/server/observable"
 import { eventEmitter } from "./event-emitter"
 
 export const userRouter = createTRPCRouter({
+  fetchOne: publicProcedure
+    .input(USER_FETCH_ONE_VALIDATION_SCHEMA)
+    .query(async ({ input }) => fetchUser(input)),
   create: publicProcedure
     .input(USER_CREATE_VALIDATION_SCHEMA)
     .mutation(async ({ input }) => {
