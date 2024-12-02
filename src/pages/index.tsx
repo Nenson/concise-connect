@@ -1,10 +1,16 @@
 import { ApplicationToolbar } from "@/components/application-toolbar.component"
+import { CreateUserModal } from "@/components/create-user-modal.component"
 import { MessagingSection } from "@/components/messaging-section.component"
 import { UsersList } from "@/components/users-list.component"
 import { Box } from "@mui/material"
 import Head from "next/head"
+import { useState } from "react"
+import { useCookies } from "react-cookie"
 
 export default function Home() {
+  const [cookies] = useCookies(["user"])
+  const [showModal, setShowModal] = useState(Boolean(!cookies.user))
+
   return (
     <>
       <Head>
@@ -25,6 +31,7 @@ export default function Home() {
           <UsersList />
           <MessagingSection />
         </Box>
+        <CreateUserModal open={showModal} onClose={() => setShowModal(false)} />
       </main>
     </>
   )
