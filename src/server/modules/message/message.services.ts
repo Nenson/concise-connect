@@ -1,6 +1,9 @@
 import { db } from "@/server/db"
 import { Message } from "@prisma/client"
-import { IMessageCreateInput } from "./message.validation-schemas"
+import {
+  IMessageCreateInput,
+  IMessageFetchManyInput,
+} from "./message.validation-schemas"
 
 export interface IMessageCreateOutput {
   readonly data: Message | null
@@ -27,8 +30,13 @@ export async function createMessage(
   }
 }
 
-export async function fetchMessages() {
-  const messages = await db.message.findMany()
+export async function fetchMessages(input: IMessageFetchManyInput) {
+  const messages = await db.message.findMany({
+    where: {
+      toUserId: input.toUserId,
+      fromUserId: input.fromUserId,
+    },
+  })
 
   return {
     data: messages,

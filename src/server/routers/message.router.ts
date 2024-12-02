@@ -1,4 +1,7 @@
-import { MESSAGE_CREATE_VALIDATION_SCHEMA } from "../modules/message/message.validation-schemas"
+import {
+  MESSAGE_CREATE_VALIDATION_SCHEMA,
+  MESSAGE_FETCH_MANY_VALIDATION_SCHEMA,
+} from "../modules/message/message.validation-schemas"
 import { createTRPCRouter, publicProcedure } from "../trpc"
 import {
   createMessage,
@@ -35,5 +38,7 @@ export const messageRouter = createTRPCRouter({
       }
     })
   }),
-  fetchMany: publicProcedure.query(async () => fetchMessages()),
+  fetchMany: publicProcedure
+    .input(MESSAGE_FETCH_MANY_VALIDATION_SCHEMA)
+    .query(async ({ input }) => fetchMessages(input)),
 })
