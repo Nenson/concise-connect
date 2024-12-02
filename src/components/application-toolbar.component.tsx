@@ -1,8 +1,13 @@
 import { Avatar, Box } from "@mui/material"
 import IconButton from "@mui/material/IconButton"
 import VolumeUpIcon from "@mui/icons-material/VolumeUp"
+import { RouterOutputs } from "@/utils/trpc"
 
-export function ApplicationToolbar() {
+interface IProps {
+  readonly user: RouterOutputs["user"]["fetchMany"]["data"][number]
+}
+
+export function ApplicationToolbar({ user }: IProps) {
   return (
     <Box
       sx={{
@@ -19,7 +24,7 @@ export function ApplicationToolbar() {
       <IconButton color="primary">
         <VolumeUpIcon />
       </IconButton>
-      <Avatar>H</Avatar>
+      <Avatar>{user.nickName.slice(0, 1).toUpperCase()}</Avatar>
     </Box>
   )
 }
