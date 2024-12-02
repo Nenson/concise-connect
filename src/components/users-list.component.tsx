@@ -1,20 +1,12 @@
 import { Box, Divider, List, Typography } from "@mui/material"
 import { UsersListItem } from "./users-list-item.component"
+import { RouterOutputs } from "@/utils/trpc"
 
-export function UsersList() {
-  const dummyUsers = [
-    { id: 1, nickName: "John Doe" },
-    { id: 2, nickName: "Jane Doe" },
-    { id: 3, nickName: "John Doe" },
-    { id: 4, nickName: "Jane Doe" },
-    { id: 5, nickName: "John Doe" },
-    { id: 6, nickName: "Jane Doe" },
-    { id: 7, nickName: "John Doe" },
-    { id: 8, nickName: "Jane Doe" },
-    { id: 9, nickName: "John Doe" },
-    { id: 10, nickName: "Jane Doe" },
-  ]
+interface IProps {
+  readonly users: RouterOutputs["user"]["fetchMany"]["data"]
+}
 
+export function UsersList({ users }: IProps) {
   return (
     <Box
       sx={{
@@ -44,7 +36,7 @@ export function UsersList() {
           "li:nth-child(even)": { background: "rgba(100, 200, 10, 0.3)" },
         }}
       >
-        {dummyUsers.map((user) => (
+        {(users || []).map((user) => (
           <UsersListItem key={user.id} nickName={user.nickName} />
         ))}
       </List>
