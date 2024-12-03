@@ -1,5 +1,5 @@
 import { db } from "@/server/db"
-import { Message } from "@prisma/client"
+import { Message, User } from "@prisma/client"
 import {
   IMessageCreateInput,
   IMessageFetchManyInput,
@@ -30,8 +30,13 @@ export async function createMessage(
   }
 }
 
+interface IMessageFetchManyData extends Message {
+  fromUser: User
+  toUser: User
+}
+
 export interface IMessageFetchManyOutput {
-  readonly data: Message[]
+  readonly data: IMessageFetchManyData[]
   readonly error: null
 }
 
@@ -44,6 +49,10 @@ export async function fetchMessages(
         { toUserId: input.toUserId, fromUserId: input.fromUserId },
         { toUserId: input.fromUserId, fromUserId: input.toUserId },
       ],
+    },
+    include: {
+      fromUser: true,
+      toUser: true,
     },
   })
 
