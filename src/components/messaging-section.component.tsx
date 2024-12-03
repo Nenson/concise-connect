@@ -1,17 +1,12 @@
-import {
-  Box,
-  Divider,
-  List,
-  TextField,
-  IconButton,
-  Typography,
-} from "@mui/material"
+import { Box, Divider, List, Typography } from "@mui/material"
 import { MessagingSectionMessage } from "./messaging-section-message.component"
 
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline"
-import SendIcon from "@mui/icons-material/Send"
+import { MessagingSectionCreateMessageForm } from "./messaging-section-create-message-form.component"
+import { useMessagingContext } from "@/contexts/messaging.context"
 
 export function MessagingSection() {
+  const { user, selectedUser } = useMessagingContext()
+
   const dummyMessages = [
     {
       id: 1,
@@ -162,15 +157,16 @@ export function MessagingSection() {
             padding: 0,
           }}
         >
-          {dummyMessages.map((user) => (
-            <MessagingSectionMessage
-              key={user.id}
-              fromUserId={user.fromUserId}
-              toUserId={user.toUserId}
-              text={user.text}
-              createdAt={user.date}
-            />
-          ))}
+          {selectedUser &&
+            dummyMessages.map((user) => (
+              <MessagingSectionMessage
+                key={user.id}
+                fromUserId={user.fromUserId}
+                toUserId={user.toUserId}
+                text={user.text}
+                createdAt={user.date}
+              />
+            ))}
         </List>
         <Box
           sx={{
@@ -181,38 +177,12 @@ export function MessagingSection() {
             flexShrink: 0,
           }}
         >
-          <TextField
-            variant="filled"
-            placeholder="Type your message..."
-            fullWidth={true}
-            multiline={true}
-            rows={4}
-            sx={{
-              flexGrow: 20,
-              "& .MuiInputBase-root": {
-                padding: "16px 40px 16px 16px",
-              },
-            }}
-          />
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 16,
-              right: 16,
-            }}
-          >
-            <HelpOutlineIcon />
-          </IconButton>
-          <IconButton
-            color="primary"
-            sx={{
-              position: "absolute",
-              bottom: 16,
-              right: 16,
-            }}
-          >
-            <SendIcon />
-          </IconButton>
+          {selectedUser && (
+            <MessagingSectionCreateMessageForm
+              userId={user.id}
+              selectedUserId={selectedUser.id}
+            />
+          )}
         </Box>
       </Box>
     </Box>
