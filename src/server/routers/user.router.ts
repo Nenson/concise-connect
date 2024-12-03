@@ -22,25 +22,27 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const createdUser = await createUser({ nickName: input.nickName })
 
-      const users = await fetchUsers({})
-
-      eventEmitter.emit("userCreated", users)
+      eventEmitter.emit("userCreated")
 
       return createdUser
     }),
-  onCreate: publicProcedure.subscription(() => {
-    return observable<IUserFetchManyOutput>((emit) => {
-      const onCreate = (data: IUserFetchManyOutput) => {
-        emit.next(data)
-      }
+  onCreate: publicProcedure
+    .input(USER_FETCH_MANY_VALIDATION_SCHEMA)
+    .subscription(({ input }) => {
+      return observable<IUserFetchManyOutput>((emit) => {
+        const onCreate = async () => {
+          const users = await fetchUsers({ excludeId: input.excludeId })
 
-      eventEmitter.on("userCreated", onCreate)
+          emit.next(users)
+        }
 
-      return () => {
-        eventEmitter.off("userCreated", onCreate)
-      }
-    })
-  }),
+        eventEmitter.on("userCreated", onCreate)
+
+        return () => {
+          eventEmitter.off("userCreated", onCreate)
+        }
+      })
+    }),
   fetchMany: publicProcedure
     .input(USER_FETCH_MANY_VALIDATION_SCHEMA)
     .query(async ({ input }) => fetchUsers(input)),

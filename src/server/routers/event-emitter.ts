@@ -1,9 +1,8 @@
 import EventEmitter from "events"
-import { IUserFetchManyOutput } from "../modules/user/user.services"
 import { IMessageCreateOutput } from "../modules/message/message.services"
 
 interface IEmitterEvents {
-  readonly userCreated: (data: IUserFetchManyOutput) => void
+  readonly userCreated: () => void
   readonly messageCreated: (data: IMessageCreateOutput) => void
 }
 

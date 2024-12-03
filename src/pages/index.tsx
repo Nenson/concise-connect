@@ -36,7 +36,9 @@ export default function Home() {
     excludeId: user?.id,
   })
 
-  const { data: usersSubscription } = trpc.user.onCreate.useSubscription()
+  const { data: usersSubscription } = trpc.user.onCreate.useSubscription({
+    excludeId: user?.id,
+  })
 
   return (
     <>
@@ -59,15 +61,9 @@ export default function Home() {
               <ApplicationToolbar user={user} />
               <MessagingContextProvider>
                 <UsersList
-                  users={
-                    usersSubscription?.data.filter(
-                      (item) => item.id !== user.id
-                    ) ||
-                    users?.data ||
-                    []
-                  }
+                  users={usersSubscription?.data || users?.data || []}
                 />
-                <MessagingSection user={user} />
+                <MessagingSection />
               </MessagingContextProvider>
             </>
           ) : (
