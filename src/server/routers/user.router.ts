@@ -8,7 +8,7 @@ import {
   createUser,
   fetchUser,
   fetchUsers,
-  IUserCreateOutput,
+  IUserFetchManyOutput,
 } from "@/server/modules/user/user.services"
 import { observable } from "@trpc/server/observable"
 import { eventEmitter } from "./event-emitter"
@@ -22,13 +22,15 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const createdUser = await createUser({ nickName: input.nickName })
 
-      eventEmitter.emit("userCreated", createdUser)
+      const users = await fetchUsers({})
+
+      eventEmitter.emit("userCreated", users)
 
       return createdUser
     }),
   onCreate: publicProcedure.subscription(() => {
-    return observable<IUserCreateOutput>((emit) => {
-      const onCreate = (data: IUserCreateOutput) => {
+    return observable<IUserFetchManyOutput>((emit) => {
+      const onCreate = (data: IUserFetchManyOutput) => {
         emit.next(data)
       }
 

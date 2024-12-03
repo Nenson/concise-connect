@@ -58,7 +58,14 @@ export async function fetchUser(input: IUserFetchOneInput) {
   }
 }
 
-export async function fetchUsers(input: IUserFetchManyInput) {
+export interface IUserFetchManyOutput {
+  readonly data: User[]
+  readonly error: null
+}
+
+export async function fetchUsers(
+  input: IUserFetchManyInput
+): Promise<IUserFetchManyOutput> {
   const users = await db.user.findMany({
     where: {
       id: {
