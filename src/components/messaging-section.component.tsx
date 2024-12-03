@@ -3,124 +3,20 @@ import { MessagingSectionMessage } from "./messaging-section-message.component"
 
 import { MessagingSectionCreateMessageForm } from "./messaging-section-create-message-form.component"
 import { useMessagingContext } from "@/contexts/messaging.context"
+import { trpc } from "@/utils/trpc"
 
 export function MessagingSection() {
   const { user, selectedUser } = useMessagingContext()
 
-  const dummyMessages = [
-    {
-      id: 1,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "Hello, how are you?",
-      date: new Date(),
-    },
-    {
-      id: 2,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm fine, thank you!",
-      date: new Date(),
-    },
-    {
-      id: 3,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "What are you doing?",
-      date: new Date(),
-    },
-    {
-      id: 4,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm working on a project.",
-      date: new Date(),
-    },
-    {
-      id: 5,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "Hello, how are you?",
-      date: new Date(),
-    },
-    {
-      id: 6,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm fine, thank you!",
-      date: new Date(),
-    },
-    {
-      id: 7,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "What are you doing?",
-      date: new Date(),
-    },
-    {
-      id: 8,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm working on a project.",
-      date: new Date(),
-    },
-    {
-      id: 9,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "Hello, how are you?",
-      date: new Date(),
-    },
-    {
-      id: 10,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm fine, thank you!",
-      date: new Date(),
-    },
-    {
-      id: 11,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "What are you doing?",
-      date: new Date(),
-    },
-    {
-      id: 12,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm working on a project.",
-      date: new Date(),
-    },
-    {
-      id: 13,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "Hello, how are you?",
-      date: new Date(),
-    },
-    {
-      id: 14,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm fine, thank you!",
-      date: new Date(),
-    },
-    {
-      id: 15,
-      fromUserId: 1,
-      toUserId: 2,
-      text: "What are you doing?",
-      date: new Date(),
-    },
-    {
-      id: 16,
-      fromUserId: 2,
-      toUserId: 1,
-      text: "I'm working on a project.",
-      date: new Date(),
-    },
-  ]
+  const { data: messages } = trpc.message.fetchMany.useQuery({
+    toUserId: user.id,
+    fromUserId: selectedUser?.id,
+  })
+
+  const { data: messagesSubscription } = trpc.message.onCreate.useSubscription({
+    toUserId: user.id,
+    fromUserId: selectedUser?.id,
+  })
 
   return (
     <Box
@@ -158,15 +54,9 @@ export function MessagingSection() {
           }}
         >
           {selectedUser &&
-            dummyMessages.map((user) => (
-              <MessagingSectionMessage
-                key={user.id}
-                fromUserId={user.fromUserId}
-                toUserId={user.toUserId}
-                text={user.text}
-                createdAt={user.date}
-              />
-            ))}
+            (messagesSubscription?.data || messages?.data || []).map(
+              (message) => <MessagingSectionMessage message={message} />
+            )}
         </List>
         <Box
           sx={{

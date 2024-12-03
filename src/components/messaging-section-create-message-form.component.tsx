@@ -27,6 +27,7 @@ export function MessagingSectionCreateMessageForm({
     formState: { errors },
     handleSubmit,
     watch,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -49,13 +50,14 @@ export function MessagingSectionCreateMessageForm({
       component="form"
       autoComplete="off"
       noValidate={true}
-      onSubmit={handleSubmit((data) =>
+      onSubmit={handleSubmit((data) => {
         createMessage({
           fromUserId: userId,
           toUserId: selectedUserId,
           text: data.messageText,
         })
-      )}
+        setValue("messageText", "")
+      })}
       sx={{
         width: "100%",
       }}
