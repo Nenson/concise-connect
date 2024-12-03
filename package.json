@@ -30,6 +30,7 @@
     "@trpc/next": "11.0.0-rc.648",
     "@trpc/react-query": "11.0.0-rc.648",
     "@trpc/server": "11.0.0-rc.648",
+    "date-fns": "^4.1.0",
     "next": "^15.0.2",
     "react": "^18.2.0",
     "react-cookie": "^7.2.2",
