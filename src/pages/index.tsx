@@ -3,7 +3,6 @@ import { CreateUserModal } from "@/components/create-user-modal.component"
 import { MessagingSection } from "@/components/messaging-section.component"
 import { UsersList } from "@/components/users-list.component"
 import { MessagingContextProvider } from "@/contexts/messaging.context"
-import { trpc } from "@/utils/trpc"
 import { Box } from "@mui/material"
 import Head from "next/head"
 import { useEffect, useState } from "react"
@@ -32,14 +31,6 @@ export default function Home() {
     }
   }
 
-  const { data: users, refetch } = trpc.user.fetchMany.useQuery({
-    excludeId: user?.id,
-  })
-
-  const { data: usersSubscription } = trpc.user.onCreate.useSubscription({
-    excludeId: user?.id,
-  })
-
   return (
     <>
       <Head>
@@ -59,10 +50,8 @@ export default function Home() {
           {user ? (
             <>
               <ApplicationToolbar user={user} />
-              <MessagingContextProvider>
-                <UsersList
-                  users={usersSubscription?.data || users?.data || []}
-                />
+              <MessagingContextProvider user={user}>
+                <UsersList />
                 <MessagingSection />
               </MessagingContextProvider>
             </>
@@ -71,7 +60,6 @@ export default function Home() {
               onCreateUser={(userData) => {
                 setUser(userData)
                 setUserToLocalStorage(userData)
-                refetch()
               }}
             />
           )}

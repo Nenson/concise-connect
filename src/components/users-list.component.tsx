@@ -1,14 +1,9 @@
 import { Box, Divider, List, Typography } from "@mui/material"
 import { UsersListItem } from "./users-list-item.component"
-import { IUser } from "@/pages"
 import { useMessagingContext } from "@/contexts/messaging.context"
 
-interface IProps {
-  readonly users: IUser[]
-}
-
-export function UsersList({ users }: IProps) {
-  const { selectedUserId, setSelectedUser } = useMessagingContext()
+export function UsersList() {
+  const { selectedUser, users, setSelectedUser } = useMessagingContext()
 
   return (
     <Box
@@ -39,12 +34,12 @@ export function UsersList({ users }: IProps) {
           "li:nth-child(even)": { background: "rgba(100, 200, 10, 0.3)" },
         }}
       >
-        {(users || []).map((user) => (
+        {users.map((user) => (
           <UsersListItem
             key={user.id}
             nickName={user.nickName}
-            isSelected={selectedUserId === String(user.id)}
-            onSelect={() => setSelectedUser(String(user.id))}
+            isSelected={selectedUser?.id === user.id}
+            onSelect={() => setSelectedUser(user.id)}
           />
         ))}
       </List>

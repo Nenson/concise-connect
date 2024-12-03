@@ -7,24 +7,39 @@ import React, {
 } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
+import { IUser } from "@/pages"
+import { trpc } from "@/utils/trpc"
 
 interface MessagingContextData {
-  readonly selectedUserId: string | null
-  readonly setSelectedUser: (userId: string) => void
+  readonly user: IUser
+  readonly users: IUser[]
+  readonly selectedUser: IUser | null
+  readonly setSelectedUser: (userId: number) => void
 }
 
 interface Props {
   readonly children: ReactNode
+  readonly user: IUser
 }
 
 const MessagingContext = createContext({})
 
-export const MessagingContextProvider = ({ children }: Props) => {
+export const MessagingContextProvider = ({ children, user }: Props) => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [selectedUserId, setSelectedUserId] = useState(searchParams.get("user"))
+  const [selectedUserId, setSelectedUserId] = useState(
+    searchParams.get("user") ? Number(searchParams.get("user")) : null
+  )
+
+  const { data: users } = trpc.user.fetchMany.useQuery({
+    excludeId: user?.id,
+  })
+
+  const { data: usersSubscription } = trpc.user.onCreate.useSubscription({
+    excludeId: user?.id,
+  })
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -36,13 +51,18 @@ export const MessagingContextProvider = ({ children }: Props) => {
     [searchParams]
   )
 
-  const setSelectedUser = (userId: string) => {
+  const setSelectedUser = (userId: number) => {
     setSelectedUserId(userId)
-    router.push(pathname + "?" + createQueryString("user", userId))
+    router.push(pathname + "?" + createQueryString("user", String(userId)))
   }
 
+  const usersData = usersSubscription?.data || users?.data || []
+
   const MessagingContextData: MessagingContextData = {
-    selectedUserId,
+    user: user,
+    users: usersData,
+    selectedUser:
+      usersData.find((user) => user.id === Number(selectedUserId)) || null,
     setSelectedUser,
   }
 
