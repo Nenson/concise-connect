@@ -30,11 +30,20 @@ export async function createMessage(
   }
 }
 
-export async function fetchMessages(input: IMessageFetchManyInput) {
+export interface IMessageFetchManyOutput {
+  readonly data: Message[]
+  readonly error: null
+}
+
+export async function fetchMessages(
+  input: IMessageFetchManyInput
+): Promise<IMessageFetchManyOutput> {
   const messages = await db.message.findMany({
     where: {
-      toUserId: input.toUserId,
-      fromUserId: input.fromUserId,
+      OR: [
+        { toUserId: input.toUserId, fromUserId: input.fromUserId },
+        { toUserId: input.fromUserId, fromUserId: input.toUserId },
+      ],
     },
   })
 

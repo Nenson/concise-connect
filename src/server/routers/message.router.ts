@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc"
 import {
   createMessage,
   fetchMessages,
-  IMessageCreateOutput,
+  IMessageFetchManyOutput,
 } from "@/server/modules/message/message.services"
 import { observable } from "@trpc/server/observable"
 import { eventEmitter } from "./event-emitter"
@@ -21,23 +21,27 @@ export const messageRouter = createTRPCRouter({
         text: input.text,
       })
 
-      eventEmitter.emit("messageCreated", createdMessage)
+      eventEmitter.emit("messageCreated")
 
       return createdMessage
     }),
-  onCreate: publicProcedure.subscription(() => {
-    return observable<IMessageCreateOutput>((emit) => {
-      const onCreate = (data: IMessageCreateOutput) => {
-        emit.next(data)
-      }
+  onCreate: publicProcedure
+    .input(MESSAGE_FETCH_MANY_VALIDATION_SCHEMA)
+    .subscription(({ input }) => {
+      return observable<IMessageFetchManyOutput>((emit) => {
+        const onCreate = async () => {
+          const messages = await fetchMessages(input)
 
-      eventEmitter.on("messageCreated", onCreate)
+          emit.next(messages)
+        }
 
-      return () => {
-        eventEmitter.off("messageCreated", onCreate)
-      }
-    })
-  }),
+        eventEmitter.on("messageCreated", onCreate)
+
+        return () => {
+          eventEmitter.off("messageCreated", onCreate)
+        }
+      })
+    }),
   fetchMany: publicProcedure
     .input(MESSAGE_FETCH_MANY_VALIDATION_SCHEMA)
     .query(async ({ input }) => fetchMessages(input)),

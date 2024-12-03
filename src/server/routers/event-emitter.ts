@@ -1,9 +1,8 @@
 import EventEmitter from "events"
-import { IMessageCreateOutput } from "../modules/message/message.services"
 
 interface IEmitterEvents {
   readonly userCreated: () => void
-  readonly messageCreated: (data: IMessageCreateOutput) => void
+  readonly messageCreated: () => void
 }
 
 declare interface EventsEmitter {
