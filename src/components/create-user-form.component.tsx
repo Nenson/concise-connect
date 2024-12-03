@@ -85,27 +85,27 @@ export function CreateUserForm({ onSuccess }: IProps) {
   return (
     <Box
       component="form"
+      autoComplete="off"
+      noValidate={true}
+      onSubmit={handleSubmit((data) =>
+        createUser({
+          nickName: data.nickName,
+        })
+      )}
       sx={{
         width: "100%",
         display: "flex",
         flexDirection: "column",
         gap: 2,
       }}
-      noValidate
-      autoComplete="off"
-      onSubmit={handleSubmit((data) =>
-        createUser({
-          nickName: data.nickName,
-        })
-      )}
     >
       <Controller
         name="nickName"
         control={control}
         render={({ field }) => (
           <TextField
-            id="create-user-form-nickName"
             {...field}
+            id="create-user-form-nickName"
             label="Nickname"
             variant="outlined"
             autoFocus={true}
