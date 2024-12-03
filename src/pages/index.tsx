@@ -24,7 +24,7 @@ export default function Home() {
         setUser(JSON.parse(user))
       }
     }
-  })
+  }, [])
 
   const setUserToLocalStorage = (userData: IUser) => {
     if (typeof window !== "undefined") {
